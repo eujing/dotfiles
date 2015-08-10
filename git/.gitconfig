@@ -1,0 +1,7 @@
+[user]
+	email = chuaeujing@gmail.com
+	name = Chua Eu Jing
+[core]
+	editor = vim
+[push]
+	default = simple
