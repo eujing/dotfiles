@@ -62,6 +62,7 @@ au FileType py set smartindent
 "NERDTree Settings
 map <F2> :NERDTreeToggle<CR>
 map <F3> :NERDTreeFind<CR>
+let NERDTreeIgnore = ['\.pyc$']
 
 "Syntastic settings
 set statusline+=%#warningmsg#
