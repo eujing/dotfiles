@@ -28,7 +28,7 @@ URxvt.lineSpace:            0
 
 ! Fonts
 URxvt.allow_bold:           false
-URxvt.font:                 xft:SourceCodePro-10:hinting=True;antialias=True
+URxvt.font:                 xft:Source Code Pro for Powerline-12:hinting=True;antialias=True
 ! URxvt*font: xft:Monospace:pixelsize=14
 URxvt*boldFont: xft:Monospace:pixelsize=14
 
