@@ -35,6 +35,7 @@ NeoBundle 'Valloric/YouCompleteMe', {
     \   }
     \}
 NeoBundle 'marijnh/tern_for_vim'
+NeoBundle 'kien/ctrlp.vim'
 call neobundle#end()
 
 syntax enable
