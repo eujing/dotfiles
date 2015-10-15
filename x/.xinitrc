@@ -3,4 +3,6 @@
 feh --bg-fill --randomize ~/.wallpapers/*
 sxhkd &
 compton -cG &
+udiskie -2 &
+thunar --daemon &
 exec bspwm

@@ -34,8 +34,13 @@ NeoBundle 'Valloric/YouCompleteMe', {
     \   'unix': './install.sh --clang-completer --system-libclang --omnisharp-completer',
     \   }
     \}
-NeoBundle 'marijnh/tern_for_vim'
 NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'marijnh/tern_for_vim', {
+    \ 'build': {
+    \   'unix': 'npm install',  
+    \ },
+    \ 'build_commands': ['node', 'npm'],
+    \ }
 call neobundle#end()
 
 syntax enable
@@ -75,7 +80,8 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height=5
-let g:syntatstic_html_tidy_exec = 'tidy'
+let g:syntastic_html_tidy_exec = 'tidy'
+let g:syntastic_python_flake8_args='--ignore=E501'
 
 map <F5> :Error<CR>
 map <F6> :lclose<CR>
