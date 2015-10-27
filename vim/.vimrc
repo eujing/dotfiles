@@ -41,6 +41,7 @@ NeoBundle 'marijnh/tern_for_vim', {
     \ },
     \ 'build_commands': ['node', 'npm'],
     \ }
+NeoBundle 'tpope/vim-obsession'
 call neobundle#end()
 
 syntax enable
@@ -92,6 +93,8 @@ map [1 :lprevious<CR>
 " YouCompleteMe settings
 let g:ycm_semantic_triggers = {
     \ 'fsharp': ["."],
+    \ 'html': ["</"],
+    \ 'htmldjango': ["</", "{{", "{%"],
     \ }
 
 " Lightline settings
