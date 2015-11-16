@@ -42,6 +42,7 @@ NeoBundle 'marijnh/tern_for_vim', {
     \ 'build_commands': ['node', 'npm'],
     \ }
 NeoBundle 'tpope/vim-obsession'
+NeoBundle 'mxw/vim-jsx'
 call neobundle#end()
 
 syntax enable
@@ -83,6 +84,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height=5
 let g:syntastic_html_tidy_exec = 'tidy'
 let g:syntastic_python_flake8_args='--ignore=E501'
+let g:syntastic_javascript_checkers=['eslint']
 
 map <F5> :Error<CR>
 map <F6> :lclose<CR>
