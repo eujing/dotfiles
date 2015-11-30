@@ -28,6 +28,7 @@ NeoBundle 'fsharp/vim-fsharp', {
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'mxw/vim-jsx'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'Valloric/YouCompleteMe', {
     \ 'build': {
@@ -42,7 +43,16 @@ NeoBundle 'marijnh/tern_for_vim', {
     \ 'build_commands': ['node', 'npm'],
     \ }
 NeoBundle 'tpope/vim-obsession'
-NeoBundle 'mxw/vim-jsx'
+NeoBundle 'tmhedberg/SimpylFold'
+NeoBundle 'Shougo/vimproc.vim', {
+    \ 'build' : {
+    \     'windows' : 'tools\\update-dll-mingw',
+    \     'cygwin' : 'make -f make_cygwin.mak',
+    \     'mac' : 'make',
+    \     'linux' : 'make',
+    \     'unix' : 'gmake',
+    \    },
+    \ }
 call neobundle#end()
 
 syntax enable
