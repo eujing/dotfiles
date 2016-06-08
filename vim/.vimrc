@@ -192,5 +192,9 @@ function! s:syntastic()
     call lightline#update()
 endfunction
 
+let g:ctrlp_custom_ignore = {
+    \ 'file': '\v\.(pyc)$',
+    \ }
+
 set laststatus=2
 set noshowmode
