@@ -53,6 +53,7 @@ NeoBundle 'Shougo/vimproc.vim', {
     \     'unix' : 'gmake',
     \    },
     \ }
+NeoBundle 'Yggdroot/indentLine'
 call neobundle#end()
 
 syntax enable
