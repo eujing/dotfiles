@@ -9,11 +9,17 @@ num_mon=$(bspc query -M | wc -l)
 while read -r line ; do
 	case $line in
 		S*)
-            batt_perc=$(upower -i $(upower -e | grep 'BAT') | grep -E "percentage" | awk '{print $2}')
-            batt_state=$(upower -i $(upower -e | grep 'BAT') | grep -E "state" | awk '{print $2}')
-
-			# clock output
-			sys="%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} Battery ${batt_state}, ${batt_perc} | ${line#?} %{B-}%{F-}"
+            declare -f upower
+            if [ $? = 0 ]; then
+                batt_perc=$(upower -i $(upower -e | grep 'BAT') | grep -E "percentage" | awk '{print $2}')
+                batt_state=$(upower -i $(upower -e | grep 'BAT') | grep -E "state" | awk '{print $2}')
+                
+                # clock output
+			    sys="%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} Battery ${batt_state}, ${batt_perc} | ${line#?} %{B-}%{F-}"
+            else
+                # clock output
+                sys="%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} ${line#?} %{B-}%{F-}"
+            fi
 			;;
 		T*)
 			# xtitle output
