@@ -6,7 +6,7 @@ super + Return
 	termite
 
 super + space
-    dmenu_run -dim 0.35 -h 24
+    dmenu_run -dim 0.35 -h 30 -nb "#3B4252" -nf "#D8DEE9" -sb "#81A1C1" -sf "#E5E9F0"
 
 # make sxhkd reload its configuration files:
 super + Escape

@@ -16,6 +16,7 @@ NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'arcticicestudio/nord-vim'
 NeoBundle 'fsharp/vim-fsharp', {
     \ 'description': 'F# support for vim',
     \ 'lazy': 1,
@@ -58,8 +59,9 @@ call neobundle#end()
 
 syntax enable
 set term=xterm-256color
-set background=dark
-colorscheme solarized
+"set t_Co=256
+"set background=dark
+colorscheme nord
 filetype plugin indent on
 set omnifunc=syntaxcomplete#Complete
 set tabstop=4
@@ -118,7 +120,7 @@ augroup reload_vimrc
 augroup END
 
 let g:lightline = {
-    \ 'colorscheme': 'solarized',
+    \ 'colorscheme': 'nord',
     \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
     \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3"},
     \ 'active': {
@@ -196,7 +198,12 @@ endfunction
 
 let g:ctrlp_custom_ignore = {
     \ 'file': '\v\.(pyc)$',
+    \ 'dir': '\.git$\|node_modules\',
     \ }
+
+let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+execute "set rtp+=" . g:opamshare . "/merlin/vim"
+let g:syntastic_ocaml_checkers = ['merlin']
 
 set laststatus=2
 set noshowmode

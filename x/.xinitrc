@@ -2,7 +2,7 @@
 
 feh --bg-fill --randomize ~/.wallpapers/*
 sxhkd &
-compton -cG &
+compton -cG --respect-prop-shadow &
 udiskie -2 &
 thunar --daemon &
 exec bspwm
