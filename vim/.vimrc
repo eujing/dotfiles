@@ -15,6 +15,7 @@ NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'michaeljsmith/vim-indent-object'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'arcticicestudio/nord-vim'
 NeoBundle 'fsharp/vim-fsharp', {
@@ -68,11 +69,13 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-set number
 set wildmenu
 set incsearch
 set hlsearch
 set autoindent
+"Both absolute and relative line numbers
+set relativenumber
+set number
 NeoBundleCheck
 
 map <silent> <C-N> :silent noh<CR>
@@ -196,10 +199,12 @@ function! s:syntastic()
     call lightline#update()
 endfunction
 
+set wildignore+=*/node_modules/*
 let g:ctrlp_custom_ignore = {
     \ 'file': '\v\.(pyc)$',
     \ 'dir': '\.git$\|node_modules\',
     \ }
+let g:ctrlp_working_path_mode = '0'
 
 let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
 execute "set rtp+=" . g:opamshare . "/merlin/vim"
