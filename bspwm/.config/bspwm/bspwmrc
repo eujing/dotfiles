@@ -15,10 +15,11 @@ bspc config focus_follows_pointer   true
 
 # bspc monitor DVI-I-2 -d I II III IV V
 # bspc monitor DVI-I-3 -d VI VII VIII IX X
-MONITORS=`xrandr -q | grep '\bconnected\b' | awk '{print $1}'`
-for i in ${MONITORS[@]}; do
-    n=$[i * 5]
-    bspc monitor ${MONITORS[$i]} -d $[n + 1] $[n + 2] $[n + 3] $[n + 4] $[n + 5];
+MONITORS=($(xrandr -q | grep '\bconnected\b' | awk '{print $1}'))
+for i in ${!MONITORS[@]}; do
+    n=$[i * 3]
+    bspc monitor ${MONITORS[$i]} -d $[n + 1] $[n + 2] $[n + 3];
+    # bspc monitor ${MONITORS[$i]} -d 1 2 3 4 5;
 done
 bspc rule -a Gimp desktop='^8' state=floating follow=on
 bspc rule -a Chromium desktop='^2'

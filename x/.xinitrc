@@ -3,6 +3,11 @@
 eval `ssh-agent`
 ssh-add -k
 
+N_MONITORS=$(xrandr -q | grep '\bconnected\b' | wc -l)
+if [[ $N_MONITORS = "3"]]; then
+    ./.screenlayout/triplemonitor.sh
+fi
+
 feh --bg-fill --randomize ~/.wallpapers/*
 setxkbmap -option caps:escape
 sxhkd &
