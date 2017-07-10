@@ -28,6 +28,8 @@ XF86AudioPlay
 XF86AudioPrev
     playerctl previous
 
+ctrl + alt + l
+    i3lock -fo -e
 #
 # bspwm hotkeys
 #

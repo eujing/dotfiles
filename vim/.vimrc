@@ -1,66 +1,43 @@
-if has('vim_starting')
-    if &compatible
-        set nocompatible
-    endif
-    
-    set rtp+=~/.vim/bundle/neobundle.vim/
+" Auto install vim-plug if not available
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-let g:neobundle#install_process_timeout = 1500
-
-call neobundle#begin(expand('~/.vim/bundle'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'arcticicestudio/nord-vim'
-NeoBundle 'fsharp/vim-fsharp', {
-    \ 'description': 'F# support for vim',
-    \ 'lazy': 1,
-    \ 'autoload' : {'filetypes': 'fsharp'},
-    \ 'build': {
-    \   'unix': 'make fsautocomplete'
-    \ },
-    \ 'build_commands': ['curl', 'make', 'mozroots', 'touch', 'unzip'],
+call plug#begin('~/.vim/bundle')
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'w0rp/ale'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'arcticicestudio/nord-vim'
+Plug 'fsharp/vim-fsharp', {
+    \ 'for': 'fsharp',
+    \ 'do': 'make fsautocomplete',
     \}
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'mxw/vim-jsx'
-NeoBundle 'Raimondi/delimitMate'
-NeoBundle 'Valloric/YouCompleteMe', {
-    \ 'build': {
-    \   'unix': './install.sh --clang-completer --system-libclang --omnisharp-completer',
-    \   }
+Plug 'itchyny/lightline.vim'
+Plug 'jelera/vim-javascript-syntax'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'Raimondi/delimitMate'
+Plug 'Valloric/YouCompleteMe', {
+    \ 'do': './install.py --clang-completer --omnisharp-completer --tern-completer --system-libclang'
     \}
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'marijnh/tern_for_vim', {
-    \ 'build': {
-    \   'unix': 'npm install',  
-    \ },
-    \ 'build_commands': ['node', 'npm'],
-    \ }
-NeoBundle 'tpope/vim-obsession'
-NeoBundle 'tmhedberg/SimpylFold'
-NeoBundle 'Shougo/vimproc.vim', {
-    \ 'build' : {
-    \     'windows' : 'tools\\update-dll-mingw',
-    \     'cygwin' : 'make -f make_cygwin.mak',
-    \     'mac' : 'make',
-    \     'linux' : 'make',
-    \     'unix' : 'gmake',
-    \    },
-    \ }
-NeoBundle 'Yggdroot/indentLine'
-call neobundle#end()
+Plug 'junegunn/fzf', {
+    \ 'dir': '~/.fzf',
+    \ 'do': './install --all',
+    \}
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-obsession'
+Plug 'tmhedberg/SimpylFold'
+Plug 'PeterRincker/vim-argumentative'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-commentary'
+call plug#end()
 
 syntax enable
 set term=xterm-256color
-"set t_Co=256
-"set background=dark
 colorscheme nord
 filetype plugin indent on
 set omnifunc=syntaxcomplete#Complete
@@ -68,42 +45,72 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
-set number
 set wildmenu
 set incsearch
 set hlsearch
 set autoindent
-NeoBundleCheck
+"Both absolute and relative line numbers
+set relativenumber
+set number
 
 map <silent> <C-N> :silent noh<CR>
 
 au FileType py set autoindent
 au FileType py set smartindent
 
-"NERDTree Settings
-map <F2> :NERDTreeToggle<CR>
-map <F3> :NERDTreeFind<CR>
-let NERDTreeIgnore = ['\.pyc$']
+"ALE settings
+let g:ale_open_list = 1
+let g:ale_list_window_size = 5
+let g:ale_linters = {
+    \ 'javascript': ['eslint'],
+    \}
+let g:ale_python_flake8_args = "--ignore=E501"
+let g:ale_echo_cursor = 0
 
-"Syntastic settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+highlight clear ALEErrorSign
+highlight clear ALEWarningSign
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_loc_list_height=5
-let g:syntastic_html_tidy_exec = 'tidy'
-let g:syntastic_python_flake8_args='--ignore=E501'
-let g:syntastic_javascript_checkers=['eslint']
+function! LinterStatus() abort
+    let l:counts = ale#statusline#Count(bufnr(''))
+
+    let l:all_errors = l:counts.error + l:counts.style_error
+    let l:all_non_errors = l:counts.total - l:all_errors
+
+    return l:counts.total == 0 ? 'OK' : printf(
+    \   '%dW %dE',
+    \   all_non_errors,
+    \   all_errors
+    \)
+endfunction
+
+set statusline=%{LinterStatus()}
+
+" wrap :cnext/:cprevious and :lnext/:lprevious
+function! WrapCommand(direction, prefix)
+    if a:direction == "up"
+        try
+            execute a:prefix . "previous"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute a:prefix . "last"
+        catch /^Vim\%((\a\+)\)\=:E\%(776\|42\):/
+        endtry
+    elseif a:direction == "down"
+        try
+            execute a:prefix . "next"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute a:prefix . "first"
+        catch /^Vim\%((\a\+)\)\=:E\%(776\|42\):/
+        endtry
+    endif
+endfunction
 
 map <F5> :Error<CR>
 map <F6> :lclose<CR>
-map ]1 :lnext<CR>
-map [1 :lprevious<CR>
+map ]1 :call WrapCommand('down', 'l')<CR>
+map [1 :call WrapCommand('up', 'l')<CR>
 
+"Python autopep8 formatting with gq
+au FileType python setlocal formatprg=autopep8\ -
 
 " YouCompleteMe settings
 let g:ycm_semantic_triggers = {
@@ -126,7 +133,7 @@ let g:lightline = {
     \ 'active': {
     \   'left': [ [ 'mode', 'paste'],
     \             [ 'fugitive', 'filename' ] ],
-    \   'right': [ [ 'syntastic', 'lineinfo' ],
+    \   'right': [ [ 'ale', 'lineinfo' ],
     \              [ 'percent' ],
     \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
     \ },
@@ -142,10 +149,10 @@ let g:lightline = {
     \   'fugitive': '(exists("*fugitive#head") && "" != fugitive#head())'
     \ },
     \ 'component_expand': {
-    \   'syntastic': 'SyntasticStatuslineFlag',
+    \   'ale': 'LightLineAle',
     \ },
     \ 'component_type': {
-    \   'syntastic': 'error',
+    \   'ale': 'error',
     \ }
     \ }
 
@@ -186,24 +193,22 @@ function! MyFilename()
          \ ('' != MyModified() ? ' ' . MyModified() : '')
 endfunction
 
-augroup AutoSyntastic
-    autocmd!
-    autocmd BufWritePost *.c,*.cpp,*.py call s:syntastic()
-augroup END
-
-function! s:syntastic()
-    SyntasticCheck
-    call lightline#update()
+function! LightLineAle()
+    return ale#statusline#Status()
 endfunction
 
-let g:ctrlp_custom_ignore = {
-    \ 'file': '\v\.(pyc)$',
-    \ 'dir': '\.git$\|node_modules\',
-    \ }
+augroup UpdateAleLightLine
+    autocmd!
+    autocmd User ALELint call lightline#update()
+augroup END
+
+"FZF settings
+set wildignore+=*/node_modules/*
+noremap <C-P> :Files<cr>
 
 let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
 execute "set rtp+=" . g:opamshare . "/merlin/vim"
-let g:syntastic_ocaml_checkers = ['merlin']
+"let g:syntastic_ocaml_checkers = ['merlin']
 
 set laststatus=2
 set noshowmode
