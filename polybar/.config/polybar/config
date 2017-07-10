@@ -52,7 +52,7 @@ font-2 = "Wuncon Siji:pixelsize=10;1"
 
 modules-left = bspwm
 modules-center = xwindow
-modules-right = filesystem backlight-acpi volume wlan battery date powermenu
+modules-right = filesystem backlight-acpi volume wlan eth battery date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -102,6 +102,8 @@ label-unmounted-foreground = ${colors.foreground-alt}
 
 [module/bspwm]
 type = internal/bspwm
+
+pin-workspaces = true
 
 label-focused = %index%
 label-focused-background = ${colors.background-alt}
@@ -227,7 +229,7 @@ ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/eth]
 type = internal/network
-interface = 
+interface = enp4s0 
 interval = 3.0
 
 format-connected-underline = #55aa55
@@ -235,11 +237,10 @@ format-connected-prefix = " "
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
 
-format-disconnected =
-;format-disconnected = <label-disconnected>
-;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
-;label-disconnected-foreground = ${colors.foreground-alt}
+format-disconnected = <label-disconnected>
+format-disconnected-underline = ${colors.alert}
+label-disconnected = %ifname% disconnected
+label-disconnected-foreground = ${colors.foreground-alt}
 
 [module/date]
 type = internal/date

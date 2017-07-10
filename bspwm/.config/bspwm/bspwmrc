@@ -15,7 +15,7 @@ bspc config focus_follows_pointer   true
 
 # bspc monitor DVI-I-2 -d I II III IV V
 # bspc monitor DVI-I-3 -d VI VII VIII IX X
-MONITORS=($(xrandr -q | grep '\bconnected\b' | awk '{print $1}'))
+MONITORS=($(xrandr -q | grep '\bconnected\b' | sort -t '+' -nk2 | awk '{print $1}'))
 for i in ${!MONITORS[@]}; do
     n=$[i * 3]
     bspc monitor ${MONITORS[$i]} -d $[n + 1] $[n + 2] $[n + 3];
