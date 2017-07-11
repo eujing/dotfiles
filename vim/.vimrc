@@ -65,6 +65,7 @@ let g:ale_linters = {
     \ 'javascript': ['eslint'],
     \}
 let g:ale_python_flake8_args = "--ignore=E501"
+let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=silent --incremental --ignore-missing-imports"
 let g:ale_echo_cursor = 0
 
 highlight clear ALEErrorSign
