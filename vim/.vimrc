@@ -120,6 +120,7 @@ let g:ycm_semantic_triggers = {
     \ 'htmldjango': ["</", "{{", "{%"],
     \ }
 let g:ycm_python_binary_path = 'python'
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " Lightline settings
 augroup reload_vimrc
