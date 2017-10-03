@@ -13,20 +13,26 @@ super + Escape
 	pkill -USR1 -x sxhkd
 
 # Media keys
-# XF86AudioMute
-#  	playerctl play-pause
-
-XF86AudioRaiseVolume
-	playerctl next
-
-XF86AudioLowerVolume
-	playerctl previous
-
 XF86AudioPlay
     playerctl play-pause
 
+XF86AudioStop
+    playerctl stop
+
+XF86AudioMute
+    sh ~/.config/polybar/pavolume.sh --togmute
+
+XF86AudioRaiseVolume
+    sh ~/.config/polybar/pavolume.sh --up
+
+XF86AudioLowerVolume
+    sh ~/.config/polybar/pavolume.sh --down
+
 XF86AudioPrev
     playerctl previous
+
+XF86AudioPrev
+    playerctl next
 
 ctrl + alt + l
     i3lock -fo -e

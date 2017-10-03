@@ -52,7 +52,7 @@ font-2 = "Wuncon Siji:pixelsize=10;1"
 
 modules-left = bspwm
 modules-center = xwindow
-modules-right = filesystem backlight-acpi volume wlan eth battery date powermenu
+modules-right = filesystem backlight-acpi pavolume wlan eth battery date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -374,9 +374,9 @@ margin-bottom = 5
 
 [module/pavolume]
 type = custom/script
-interval = 2
-label = %output%
-exec = ~/.config/polybar/pavolume.sh
+tail = true
+label = VOL: %output%
+exec = ~/.config/polybar/pavolume.sh --listen
 click-right = exec pavucontrol
 click-left = ~/.config/polybar/pavolume.sh --togmute
 scroll-up = ~/.config/polybar/pavolume.sh --up

@@ -58,6 +58,11 @@ map <silent> <C-N> :silent noh<CR>
 au FileType py set autoindent
 au FileType py set smartindent
 
+"List chars
+noremap <F3> :set list!<CR>
+set list
+set listchars=tab:→\ ,eol:↲,trail:•
+
 "ALE settings
 let g:ale_open_list = 1
 let g:ale_list_window_size = 5
@@ -65,7 +70,7 @@ let g:ale_linters = {
     \ 'javascript': ['eslint'],
     \}
 let g:ale_python_flake8_args = "--ignore=E501"
-let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=silent --incremental --ignore-missing-imports"
+let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=normal --incremental"
 let g:ale_echo_cursor = 0
 
 highlight clear ALEErrorSign
@@ -120,6 +125,7 @@ let g:ycm_semantic_triggers = {
     \ 'htmldjango': ["</", "{{", "{%"],
     \ }
 let g:ycm_python_binary_path = 'python'
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " Lightline settings
 augroup reload_vimrc
