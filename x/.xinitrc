@@ -14,7 +14,7 @@ fi
 feh --bg-fill --randomize ~/.wallpapers/*
 setxkbmap -option caps:escape
 sxhkd &
-compton -cG --respect-prop-shadow &
+compton --config $HOME/.config/compton.conf -b
 udiskie -2 &
 thunar --daemon &
 exec bspwm

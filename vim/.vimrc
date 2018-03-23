@@ -11,18 +11,23 @@ Plug 'airblade/vim-gitgutter'
 Plug 'w0rp/ale'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'arcticicestudio/nord-vim'
+Plug 'kamwitsta/nordisk'
+Plug 'bcicen/vim-vice'
 Plug 'fsharp/vim-fsharp', {
     \ 'for': 'fsharp',
     \ 'do': 'make fsautocomplete',
     \}
 Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
 Plug 'jelera/vim-javascript-syntax'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'Raimondi/delimitMate'
-Plug 'Valloric/YouCompleteMe', {
-    \ 'do': './install.py --clang-completer --omnisharp-completer --tern-completer --system-libclang'
-    \}
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
 Plug 'junegunn/fzf', {
     \ 'dir': '~/.fzf',
     \ 'do': './install --all',
@@ -34,13 +39,19 @@ Plug 'PeterRincker/vim-argumentative'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
+Plug 'cmugpi/vim-c0'
 call plug#end()
 
-syntax enable
+" Settings for true color and colorscheme
 set term=xterm-256color
-colorscheme nord
+set background=dark
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+colorscheme nordisk
+
+syntax enable
 filetype plugin indent on
-set omnifunc=syntaxcomplete#Complete
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -53,7 +64,15 @@ set autoindent
 set relativenumber
 set number
 
+" Ctrl + N to remove highlights
 map <silent> <C-N> :silent noh<CR>
+
+" Faster insert-to-normal mode
+augroup FastEscape
+    autocmd!
+    au InsertEnter * set timeoutlen=0
+    au InsertLeave * set timeoutlen=1000
+augroup END
 
 au FileType py set autoindent
 au FileType py set smartindent
@@ -67,8 +86,9 @@ set listchars=tab:→\ ,eol:↲,trail:•
 let g:ale_open_list = 1
 let g:ale_list_window_size = 5
 let g:ale_linters = {
-    \ 'javascript': ['eslint'],
+    \ 'javascript': ['eslint']
     \}
+" let g:ale_linter_aliases = {'c0': 'c'}
 let g:ale_python_flake8_args = "--ignore=E501"
 let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=normal --incremental"
 let g:ale_echo_cursor = 0
@@ -118,14 +138,32 @@ map [1 :call WrapCommand('up', 'l')<CR>
 "Python autopep8 formatting with gq
 au FileType python setlocal formatprg=autopep8\ -
 
-" YouCompleteMe settings
-let g:ycm_semantic_triggers = {
-    \ 'fsharp': ["."],
-    \ 'html': ["</"],
-    \ 'htmldjango': ["</", "{{", "{%"],
-    \ }
-let g:ycm_python_binary_path = 'python'
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+" Asyncomplete.vim settings
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+let g:asyncomplete_remove_duplicates = 1
+set completeopt+=preview
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" Python LSP
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
+
+" Buffer autocompletion
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'whitelist': ['c0'],
+    \ 'blacklist': ['go, python'],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ }))
 
 " Lightline settings
 augroup reload_vimrc
@@ -134,14 +172,13 @@ augroup reload_vimrc
 augroup END
 
 let g:lightline = {
-    \ 'colorscheme': 'nord',
+    \ 'colorscheme': 'nordisk',
     \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
     \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3"},
     \ 'active': {
     \   'left': [ [ 'mode', 'paste'],
     \             [ 'fugitive', 'filename' ] ],
-    \   'right': [ [ 'ale', 'lineinfo' ],
-    \              [ 'percent' ],
+    \   'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
     \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
     \ },
     \ 'component_function': {
@@ -156,10 +193,16 @@ let g:lightline = {
     \   'fugitive': '(exists("*fugitive#head") && "" != fugitive#head())'
     \ },
     \ 'component_expand': {
-    \   'ale': 'LightLineAle',
+    \  'linter_checking': 'lightline#ale#checking',
+    \  'linter_warnings': 'lightline#ale#warnings',
+    \  'linter_errors': 'lightline#ale#errors',
+    \  'linter_ok': 'lightline#ale#ok',
     \ },
     \ 'component_type': {
-    \   'ale': 'error',
+    \   'linter_checking': 'left',
+    \   'linter_warnings': 'warning',
+    \   'linter_errors': 'error',
+    \   'linter_ok': 'left',
     \ }
     \ }
 
@@ -200,22 +243,46 @@ function! MyFilename()
          \ ('' != MyModified() ? ' ' . MyModified() : '')
 endfunction
 
-function! LightLineAle()
-    return ale#statusline#Status()
-endfunction
-
-augroup UpdateAleLightLine
-    autocmd!
-    autocmd User ALELint call lightline#update()
-augroup END
-
 "FZF settings
 set wildignore+=*/node_modules/*
 noremap <C-P> :Files<cr>
 
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+
+"" [Buffers] Jump to the existing window if possible [Buffers] Jump to th
+let g:fzf_buffers_jump = 1
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
 let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
 execute "set rtp+=" . g:opamshare . "/merlin/vim"
-"let g:syntastic_ocaml_checkers = ['merlin']
+
+" C0 Settings
+au FileType c0 setlocal shiftwidth=2 softtabstop=2 expandtab cindent colorcolumn=80
+highlight ColorColumn ctermbg=0 guibg=lightgrey
 
 set laststatus=2
 set noshowmode

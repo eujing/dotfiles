@@ -17,47 +17,47 @@ function volUp {
 
         getCurVol
 
-        if [ ${capvol} = 'yes' ]
+        if [[ ${capvol} == 'yes' ]]
         then
-                if [ ${curVol} -le 100 -a ${curVol} -ge ${limit} ]
-                then
-                        pactl set-sink-volume ${active_sink} -- 100%
-                elif [ ${curVol} -lt ${limit} ]
-                then
-                        pactl set-sink-volume ${active_sink} -- +${inc}%
-                fi
-        elif [ ${curVol} -le ${maxvol} -a ${curVol} -ge ${maxlimit} ]
+            if [[ ${curVol} -le 100 && ${curVol} -ge ${limit} ]]
+            then
+                pactl set-sink-volume ${active_sink} -- 100%
+            elif [[ ${curVol} -lt ${limit} ]]
+            then
+                pactl set-sink-volume ${active_sink} -- +${inc}%
+            fi
+        elif [[ ${curVol} -le ${maxvol} && ${curVol} -ge ${maxlimit} ]]
         then
-                pactl set-sink-volume ${active_sink} ${maxvol}%
-        elif [ ${curVol} -lt ${maxlimit} ]
+            pactl set-sink-volume ${active_sink} ${maxvol}%
+        elif [[ ${curVol} -lt ${maxlimit} ]]
         then
-                pactl set-sink-volume ${active_sink} +${inc}%
+            pactl set-sink-volume ${active_sink} +${inc}%
         fi
 
         getCurVol
 
-        if [ ${osd} = 'yes' ]
+        if [[ ${osd} == 'yes' ]]
         then
-                qdbus org.kde.kded /modules/kosd showVolume ${curVol} 0
+            qdbus org.kde.kded /modules/kosd showVolume ${curVol} 0
         fi
 
-        if [ ${autosync} = 'yes' ]
+        if [[ ${autosync} == 'yes' ]]
         then
-                volSync
+            volSync
         fi
-}
+    }
 
 function volDown {
 
         pactl set-sink-volume ${active_sink} -${inc}%
         getCurVol
 
-        if [ ${osd} = 'yes' ]
+        if [[ ${osd} == 'yes' ]]
         then
                 qdbus org.kde.kded /modules/kosd showVolume ${curVol} 0
         fi
 
-        if [ ${autosync} = 'yes' ]
+        if [[ ${autosync} == 'yes' ]]
         then
                 volSync
         fi
@@ -103,7 +103,7 @@ function volMute {
                 ;;
         esac
 
-        if [ ${osd} = 'yes' ]
+        if [[ ${osd} == 'yes' ]]
         then
                 qdbus org.kde.kded /modules/kosd showVolume ${curVol} ${status}
         fi
@@ -126,7 +126,7 @@ case "$1" in
         ;;
         --togmute)
 		volMuteStatus
-                if [ ${curStatus} = 'yes' ]
+                if [[ ${curStatus} == 'yes' ]]
 	        then
         	        volMute unmute
 	        else
@@ -145,7 +145,7 @@ case "$1" in
         *)
 		getCurVol
 		volMuteStatus
-                if [ ${curStatus} = 'yes' ]
+                if [[ ${curStatus} == 'yes' ]]
                 then
 			echo " $curVol%"
 		else

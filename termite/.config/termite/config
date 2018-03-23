@@ -1,5 +1,6 @@
 [options]
-font = Source Code Pro 10
+font = SauceCodePro Nerd Font Mono Semibold 10
+# font = Anonymice Nerd Font Mono 11
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # title      Nord Termite                                    +
@@ -13,7 +14,8 @@ font = Source Code Pro 10
 
 [colors]
 foreground = #D8DEE9
-background = #2E3440
+# background = #2E3440
+background = rgba(46, 52, 64, 0.90)
 foreground_bold = #D8DEE9
 cursor = #D8DEE9
 cursor_foreground = #2E3440
@@ -35,3 +37,48 @@ color12 = #81A1C1
 color13 = #B48EAD
 color14 = #8FBCBB
 color15 = #ECEFF4
+
+# foreground      = #E5E9F0
+# foreground_bold = #ECEFF4
+# cursor          = #ECEFF4
+# # background      = #2E3440
+
+# # 16 color space
+
+# # Black, Gray, Silver, White
+# color0  = #2E3440
+# color8  = #4C566A
+# color7  = #E5E9F0
+# color15 = #8FBCBB
+
+# # Red
+# color1  = #88C0D0
+# color9  = #88C0D0
+
+# # Green
+# color2  = #BF616A
+# color10 = #BF616A
+
+# # Yellow
+# color3  = #5E81AC
+# color11 = #5E81AC
+
+# # Blue
+# color4  = #EBCB8B
+# color12 = #EBCB8B
+
+# # Purple
+# color5  = #A3BE8C
+# color13 = #A3BE8C
+
+# # Teal
+# color6  = #D08770
+# color14 = #D08770
+
+# # Extra colors
+# color16 = #81A1C1
+# color17 = #B48EAD
+# color18 = #3B4252
+# color19 = #434C5E
+# color20 = #D8DEE9
+# color21 = #ECEFF4
