@@ -13,6 +13,7 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'arcticicestudio/nord-vim'
 Plug 'kamwitsta/nordisk'
 Plug 'bcicen/vim-vice'
+Plug 'vim-python/python-syntax'
 Plug 'fsharp/vim-fsharp', {
     \ 'for': 'fsharp',
     \ 'do': 'make fsautocomplete',
@@ -43,7 +44,9 @@ Plug 'cmugpi/vim-c0'
 call plug#end()
 
 " Settings for true color and colorscheme
-set term=xterm-256color
+if has('vim')
+    set term=xterm-256color
+endif
 set background=dark
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -63,6 +66,8 @@ set autoindent
 "Both absolute and relative line numbers
 set relativenumber
 set number
+set lazyredraw
+set ttyfast
 
 " Ctrl + N to remove highlights
 map <silent> <C-N> :silent noh<CR>
@@ -76,6 +81,8 @@ augroup END
 
 au FileType py set autoindent
 au FileType py set smartindent
+" Python Syntax highlighting from python-syntax
+let g:python_highlight_all = 1
 
 "List chars
 noremap <F3> :set list!<CR>
@@ -86,12 +93,15 @@ set listchars=tab:→\ ,eol:↲,trail:•
 let g:ale_open_list = 1
 let g:ale_list_window_size = 5
 let g:ale_linters = {
-    \ 'javascript': ['eslint']
+    \ 'javascript': ['eslint'],
+    \ 'python': ['pyls']
     \}
 " let g:ale_linter_aliases = {'c0': 'c'}
 let g:ale_python_flake8_args = "--ignore=E501"
 let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=normal --incremental"
 let g:ale_echo_cursor = 0
+let g:ale_completion_enabled = 1
+noremap <C-H> :ALEHover<CR>
 
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
@@ -148,22 +158,31 @@ set completeopt+=preview
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Python LSP
-if executable('pyls')
-    " pip install python-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
+" if executable('pyls')
+"     " pip install python-language-server
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'pyls',
+"         \ 'cmd': {server_info->['pyls']},
+"         \ 'whitelist': ['python'],
+"         \ })
+" endif
 
 " Buffer autocompletion
 call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
     \ 'name': 'buffer',
-    \ 'whitelist': ['c0'],
-    \ 'blacklist': ['go, python'],
+    \ 'whitelist': [],
+    \ 'blacklist': ['go', 'python'],
     \ 'completor': function('asyncomplete#sources#buffer#completor'),
     \ }))
+
+" Clangd autocompletion
+if executable('clangd')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'clangd',
+        \ 'cmd': {server_info->['clangd']},
+        \ 'whitelist': ['c', 'c0', 'cpp', 'objc', 'objcpp'],
+        \ })
+endif
 
 " Lightline settings
 augroup reload_vimrc
@@ -282,7 +301,10 @@ execute "set rtp+=" . g:opamshare . "/merlin/vim"
 
 " C0 Settings
 au FileType c0 setlocal shiftwidth=2 softtabstop=2 expandtab cindent colorcolumn=80
-highlight ColorColumn ctermbg=0 guibg=lightgrey
+" For 15-122 Only
+au FileType c setlocal shiftwidth=2 softtabstop=2 expandtab cindent colorcolumn=80
+highlight ColorColumn ctermbg=0 guibg=LightGray
+
 
 set laststatus=2
 set noshowmode

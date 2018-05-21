@@ -11,6 +11,9 @@ if [[ $N_MONITORS == "2" ]]; then
     ./.screenlayout/dual-monitors-dorm.sh
 fi
 
+# For dunst to work
+systemctl --user set-environment DISPLAY=:0
+
 feh --bg-fill --randomize ~/.wallpapers/*
 setxkbmap -option caps:escape
 sxhkd &

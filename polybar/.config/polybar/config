@@ -21,7 +21,7 @@ alert = #BF616A
 nord-accent = #8BC0D0
 
 [bar/main-bar]
-;monitor = ${env:MONITOR:HDMI-1}
+monitor = ${env:MONITOR:}
 width = 100%
 height = 30
 ;offset-x = 1%
