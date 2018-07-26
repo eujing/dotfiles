@@ -10,7 +10,7 @@ super + space
 
 # make sxhkd reload its configuration files:
 super + Escape
-	pkill -USR1 -x sxhkd
+    pkill -USR1 -x sxhkd
 
 # Media keys
 XF86AudioPlay
@@ -20,13 +20,13 @@ XF86AudioStop
     playerctl stop
 
 XF86AudioMute
-    sh ~/.config/polybar/pavolume.sh --togmute
+    sh ~/.config/polybar/pulseaudio-tail.sh --togmute
 
 XF86AudioRaiseVolume
-    sh ~/.config/polybar/pavolume.sh --up
+    sh ~/.config/polybar/pulseaudio-tail.sh --up
 
 XF86AudioLowerVolume
-    sh ~/.config/polybar/pavolume.sh --down
+    sh ~/.config/polybar/pulseaudio-tail.sh --down
 
 XF86AudioPrev
     playerctl previous
@@ -142,18 +142,11 @@ super + alt + shift + {h,j,k,l}
 super + {Left,Down,Up,Right}
 	xdo move {-x -20,-y +20,-y -20,-x +20}
 
-#
-# pointer focus/move/resize
-#
+super + d
+    $HOME/.config/bspwm/add_named_desktop.sh
 
-# focus
-~button1
-	bspc pointer -g focus
+super + shift + d
+    $HOME/.config/bspwm/rename_desktop.sh
 
-# start move/resize
-super + button{1-3}
-	; bspc pointer -g {move,resize_side,resize_corner}
-
-# end move/resize
-super + @button{1-3}
-	bspc pointer -u
+super + alt + d
+    bspc desktop focused -r

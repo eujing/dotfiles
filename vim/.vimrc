@@ -1,3 +1,5 @@
+set nocompatible
+
 " Auto install vim-plug if not available
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -35,12 +37,12 @@ Plug 'junegunn/fzf', {
     \}
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-obsession'
-Plug 'tmhedberg/SimpylFold'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'cmugpi/vim-c0'
+Plug 'easymotion/vim-easymotion'
 call plug#end()
 
 " Settings for true color and colorscheme
@@ -62,12 +64,17 @@ set expandtab
 set wildmenu
 set incsearch
 set hlsearch
+if has('nvim')
+    set inccommand=nosplit
+endif
 set autoindent
 "Both absolute and relative line numbers
 set relativenumber
 set number
 set lazyredraw
 set ttyfast
+set hidden
+set laststatus=2
 
 " Ctrl + N to remove highlights
 map <silent> <C-N> :silent noh<CR>
@@ -78,6 +85,9 @@ augroup FastEscape
     au InsertEnter * set timeoutlen=0
     au InsertLeave * set timeoutlen=1000
 augroup END
+
+" Delay time for when vim uses fsync()
+set updatetime=100
 
 au FileType py set autoindent
 au FileType py set smartindent
@@ -90,7 +100,7 @@ set list
 set listchars=tab:→\ ,eol:↲,trail:•
 
 "ALE settings
-let g:ale_open_list = 1
+let g:ale_open_list = 0
 let g:ale_list_window_size = 5
 let g:ale_linters = {
     \ 'javascript': ['eslint'],
@@ -99,12 +109,22 @@ let g:ale_linters = {
 " let g:ale_linter_aliases = {'c0': 'c'}
 let g:ale_python_flake8_args = "--ignore=E501"
 let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=normal --incremental"
-let g:ale_echo_cursor = 0
-let g:ale_completion_enabled = 1
+let g:ale_echo_cursor = 1
+let g:ale_completion_enabled = 0
+let g:ale_pattern_options = {
+            \   '.*\.json$': {'ale_enabled': 0},
+            \   'fugitive:///*': {'ale_enabled': 0}
+            \}
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = '●'
+noremap <F5> :ALEToggle<CR>
 noremap <C-H> :ALEHover<CR>
-
+nnoremap <silent> ]e :ALENextWrap<CR>
+nnoremap <silent> [e :ALEPreviousWrap<CR>
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 function! LinterStatus() abort
     let l:counts = ale#statusline#Count(bufnr(''))
@@ -140,7 +160,6 @@ function! WrapCommand(direction, prefix)
     endif
 endfunction
 
-map <F5> :Error<CR>
 map <F6> :lclose<CR>
 map ]1 :call WrapCommand('down', 'l')<CR>
 map [1 :call WrapCommand('up', 'l')<CR>
@@ -158,14 +177,14 @@ set completeopt+=preview
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Python LSP
-" if executable('pyls')
-"     " pip install python-language-server
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'pyls',
-"         \ 'cmd': {server_info->['pyls']},
-"         \ 'whitelist': ['python'],
-"         \ })
-" endif
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
 
 " Buffer autocompletion
 call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
@@ -305,6 +324,10 @@ au FileType c0 setlocal shiftwidth=2 softtabstop=2 expandtab cindent colorcolumn
 au FileType c setlocal shiftwidth=2 softtabstop=2 expandtab cindent colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=LightGray
 
+" Netrw settings
+let g:netrw_liststyle = 3   " Tree style view
+let g:netrw_altv = 1        " Press v to open file on right split
+let g:netrw_winsize = 70    " Netrw uses 30% of split only"
 
-set laststatus=2
-set noshowmode
+" Easymotion settings
+map <Leader> <Plug>(easymotion-prefix)
