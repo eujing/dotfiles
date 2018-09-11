@@ -35,7 +35,7 @@ XF86AudioNext
     playerctl next
 
 ctrl + alt + l
-    i3lock -f -e
+    betterlockscreen --lock blur
 #
 # bspwm hotkeys
 #

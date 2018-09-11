@@ -58,7 +58,7 @@ modules-right = filesystem pulseaudio-tail wlan eth battery date powermenu
 
 tray-position = right
 tray-padding = 2
-;tray-transparent = true
+; tray-transparent = false
 tray-background = ${colors.background}
 
 wm-restack = bspwm
@@ -82,7 +82,7 @@ click-left = /home/eujing/dmenu_cmd.sh
 [module/xwindow]
 type = internal/xwindow
 label =  %title%
-label-maxlen = 100
+label-maxlen = 60
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -144,6 +144,9 @@ ws-icon-3 = slack;
 ws-icon-4 = office;
 ws-icon-5 = ssh;
 ws-icon-6 = thunar;
+ws-icon-7 = alacritty;
+ws-icon-8 = rstudio;R
+ws-icon-9 = pdf;
 ws-icon-default = 
 
 [module/i3]
