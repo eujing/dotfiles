@@ -35,5 +35,6 @@ done
 
 bspc rule -a '*:libreofficedev' state=tiled
 bspc rule -a '*:soffice' state=tiled
+bspc rule -a '*:zathura' state=tiled
 
 $HOME/.config/polybar/launch_panels.sh

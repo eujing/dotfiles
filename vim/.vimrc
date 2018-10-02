@@ -14,8 +14,6 @@ Plug 'w0rp/ale'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'arcticicestudio/nord-vim'
 Plug 'kamwitsta/nordisk'
-Plug 'bcicen/vim-vice'
-Plug 'vim-python/python-syntax'
 Plug 'fsharp/vim-fsharp', {
     \ 'for': 'fsharp',
     \ 'do': 'make fsautocomplete',
@@ -49,6 +47,7 @@ Plug 'autozimu/LanguageClient-neovim', {
 if has('nvim')
     Plug 'jalvesaq/Nvim-R'
 endif
+Plug 'vim-pandoc/vim-pandoc-syntax'
 call plug#end()
 
 " Settings for true color and colorscheme
@@ -112,7 +111,6 @@ let g:ale_linters = {
     \ 'javascript': ['eslint'],
     \ 'python': ['pyls']
     \}
-" let g:ale_linter_aliases = {'rmd': 'r'}
 let g:ale_python_flake8_args = "--ignore=E501"
 let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=normal --incremental"
 let g:ale_echo_cursor = 1
@@ -172,42 +170,6 @@ map [1 :call WrapCommand('up', 'l')<CR>
 
 "Python autopep8 formatting with gq
 au FileType python setlocal formatprg=autopep8\ -
-
-" " Asyncomplete.vim settings
-" inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
-" imap <c-space> <Plug>(asyncomplete_force_refresh)
-" let g:asyncomplete_remove_duplicates = 1
-" set completeopt+=preview
-" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-
-" " Python LSP
-" if executable('pyls')
-"     " pip install python-language-server
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'pyls',
-"         \ 'cmd': {server_info->['pyls']},
-"         \ 'whitelist': ['python'],
-"         \ })
-" endif
-
-" " Buffer autocompletion
-" call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-"     \ 'name': 'buffer',
-"     \ 'whitelist': [],
-"     \ 'blacklist': ['go', 'python'],
-"     \ 'completor': function('asyncomplete#sources#buffer#completor'),
-"     \ }))
-
-" " Clangd autocompletion
-" if executable('clangd')
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'clangd',
-"         \ 'cmd': {server_info->['clangd']},
-"         \ 'whitelist': ['c', 'c0', 'cpp', 'objc', 'objcpp'],
-"         \ })
-" endif
 
 " Lightline settings
 augroup reload_vimrc
@@ -334,7 +296,7 @@ highlight ColorColumn ctermbg=0 guibg=LightGray
 " Netrw settings
 let g:netrw_liststyle = 3   " Tree style view
 let g:netrw_altv = 1        " Press v to open file on right split
-let g:netrw_winsize = 70    " Netrw uses 30% of split only"
+let g:netrw_winsize = 70    " Netrw uses 30% of split only
 
 " Easymotion settings
 map <Leader> <Plug>(easymotion-prefix)
@@ -342,6 +304,7 @@ map <Leader> <Plug>(easymotion-prefix)
 " Nvim-R settings
 let R_in_buffer = 1
 let R_term = "alacritty"
+let R_rconsole_height = 10
 
 "NCM2 settings
 " enable ncm2 for all buffers
@@ -357,6 +320,8 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 let g:ncm2_pyclang#library_path = "/usr/lib64/libclang.so.6.0"
 
 let g:LanguageClient_serverCommands = {
-    \ 'r': ['R', '--slave', '-e', 'languageserver::run()'],
+    \ 'r': ['R', '--slave', '-e', 'languageserver::run(debug="/home/eujing/rlanguageserver.debug.log")'],
     \ 'rmd': ['R', '--slave', '-e', 'languageserver::run()'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['javascript-typescript-stdio']
     \ }
