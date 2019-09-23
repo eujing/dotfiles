@@ -14,7 +14,7 @@ fi
 # For dunst to work
 systemctl --user set-environment DISPLAY=:0
 
-feh --bg-fill --randomize ~/.wallpapers/*
+feh --bg-scale --randomize ~/.wallpapers/*
 setxkbmap -option caps:escape
 sxhkd &
 compton --config $HOME/.config/compton.conf -b
