@@ -34,6 +34,12 @@ XF86AudioPrev
 XF86AudioNext
     playerctl next
 
+XF86MonBrightnessDown
+    xbacklight -dec 5
+
+XF86MonBrightnessUp
+    xbacklight -inc 5
+
 ctrl + alt + l
     betterlockscreen --lock blur
 #

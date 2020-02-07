@@ -12,9 +12,11 @@ if [ -f ~/.bash_aliases ]; then
 . ~/.bash_aliases
 fi
 
+export PATH=/home/eujing/.local/bin:$PATH
+
 # Virtualenvwrapper settings
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Projects
-source /usr/bin/virtualenvwrapper.sh
+source $HOME/.local/bin/virtualenvwrapper.sh
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
