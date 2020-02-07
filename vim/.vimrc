@@ -14,6 +14,7 @@ Plug 'w0rp/ale'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'arcticicestudio/nord-vim'
 Plug 'kamwitsta/nordisk'
+Plug 'ericyan/vim-ocean'
 Plug 'fsharp/vim-fsharp', {
     \ 'for': 'fsharp',
     \ 'do': 'make fsautocomplete',
@@ -44,10 +45,11 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+Plug 'liuchengxu/vista.vim'
+Plug 'vim-pandoc/vim-pandoc-syntax'
 if has('nvim')
     Plug 'jalvesaq/Nvim-R'
 endif
-Plug 'vim-pandoc/vim-pandoc-syntax'
 call plug#end()
 
 " Settings for true color and colorscheme
@@ -58,7 +60,7 @@ set background=dark
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
-colorscheme nordisk
+colorscheme base16-ocean
 
 syntax enable
 filetype plugin indent on
@@ -107,9 +109,10 @@ set listchars=tab:→\ ,eol:↲,trail:•
 "ALE settings
 let g:ale_open_list = 0
 let g:ale_list_window_size = 5
+let g:ale_linter_aliases = {'rmd': ['r']}
 let g:ale_linters = {
     \ 'javascript': ['eslint'],
-    \ 'python': ['pyls']
+    \ 'python': ['pyls'],
     \}
 let g:ale_python_flake8_args = "--ignore=E501"
 let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=normal --incremental"
@@ -125,10 +128,9 @@ noremap <F5> :ALEToggle<CR>
 noremap <C-H> :ALEHover<CR>
 nnoremap <silent> ]e :ALENextWrap<CR>
 nnoremap <silent> [e :ALEPreviousWrap<CR>
-highlight clear ALEErrorSign
-highlight clear ALEWarningSign
-highlight ALEErrorSign ctermbg=NONE ctermfg=red
-highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+autocmd ColorScheme *
+    \ highlight ALEErrorSign ctermbg=NONE ctermfg=red |
+    \ highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 function! LinterStatus() abort
     let l:counts = ale#statusline#Count(bufnr(''))
@@ -178,7 +180,7 @@ augroup reload_vimrc
 augroup END
 
 let g:lightline = {
-    \ 'colorscheme': 'nordisk',
+    \ 'colorscheme': 'nord',
     \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
     \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3"},
     \ 'active': {
@@ -305,6 +307,7 @@ map <Leader> <Plug>(easymotion-prefix)
 let R_in_buffer = 1
 let R_term = "alacritty"
 let R_rconsole_height = 10
+let R_openpdf = 1
 
 "NCM2 settings
 " enable ncm2 for all buffers
@@ -319,9 +322,47 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 let g:ncm2_pyclang#library_path = "/usr/lib64/libclang.so.6.0"
 
+let g:LanguageClient_useVirtualText = 0
+let g:LanguageClient_completionPreferTextEdit = 1
 let g:LanguageClient_serverCommands = {
     \ 'r': ['R', '--slave', '-e', 'languageserver::run(debug="/home/eujing/rlanguageserver.debug.log")'],
     \ 'rmd': ['R', '--slave', '-e', 'languageserver::run()'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ 'javascript.jsx': ['javascript-typescript-stdio']
     \ }
+autocmd ColorScheme *
+    \ highlight LSPErrorSign ctermbg=NONE ctermfg=red guifg=red |
+    \ highlight LSPWarningSign ctermbg=NONE ctermfg=yellow guifg=yellow |
+    \ highlight LSPInfoSign ctermbg=NONE ctermfg=green guifg=yellow
+let g:LanguageClient_diagnosticsDisplay = {
+    \ 1: {
+        \ "name": "Error",
+        \ "texthl": "ALEError",
+        \ "signText": "✘",
+        \ "signTexthl": "LSPErrorSign",
+        \ "virtualTexthl": "Error",
+    \},
+    \ 2: {
+        \ "name": "Warning",
+        \ "texthl": "ALEWarning",
+        \ "signText": "●",
+        \ "signTexthl": "LSPWarningSign",
+        \ "virtualTexthl": "Todo",
+    \ },
+    \ 3: {
+        \ "name": "Information",
+        \ "texthl": "ALEInfo",
+        \ "signText": "●",
+        \ "signTexthl": "ALEInfoSign",
+        \ "virtualTexthl": "Todo",
+    \ },
+    \ 4: {
+        \ "name": "Hint",
+        \ "texthl": "ALEInfo",
+        \ "signText": "➤",
+        \ "signTexthl": "ALEInfoSign",
+        \ "virtualTexthl": "Todo",
+    \ },
+    \ }
+
+let g:vista_default_executive = 'lcn'

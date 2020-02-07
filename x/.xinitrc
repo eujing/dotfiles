@@ -14,7 +14,7 @@ fi
 # For dunst to work
 systemctl --user set-environment DISPLAY=:0
 
-feh --bg-fill --randomize ~/.wallpapers/*
+feh --bg-scale --randomize ~/.wallpapers/*
 setxkbmap -option caps:escape
 xinput --set-prop "SYNA8004:00 06CB:CD8B Touchpad" "libinput Natural Scrolling Enabled" 1
 sxhkd &

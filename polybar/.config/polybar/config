@@ -51,6 +51,11 @@ module-margin-right = 1
 ; font-2 = "Material Design Icons:style=Regular:size=12;2"
 ; font-3 = "FontAwesome:pixelsize=10;0"
 font-0 = "SauceCodePro Nerd Font Mono:size=10;2"
+; font-0 = fixed:pixelsize=10;1
+; font-1 = unifont:fontformat=truetype:size=8:antialias=true;0
+; font-2 = "Material Design Icons:style=Regular:size=12;2"
+; font-3 = "FontAwesome:pixelsize=10;0"
+; font-4 = "SauceCodePro Nerd Font Mono:size=16;1"
 
 modules-left = logo bspwm xwindow
 ; modules-center = xwindow
@@ -79,18 +84,23 @@ type = custom/text
 content = 
 content-padding = 0
 content-font = 0
+; content = 
+; content-padding = 2
+; content-font = 4
 click-left = /home/eujing/dmenu_cmd.sh
 
 [module/xwindow]
 type = internal/xwindow
 label =  %title%
+; label =  %title%
+; label-font = 4
 label-maxlen = 60
 
 [module/xkeyboard]
 type = internal/xkeyboard
 blacklist-0 = num lock
 
-format-prefix = " "
+format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
 format-prefix-underline = ${colors.secondary}
 
@@ -150,6 +160,35 @@ ws-icon-7 = alacritty;ﲵ
 ws-icon-8 = rstudio;R
 ws-icon-9 = pdf;
 ws-icon-default = 
+; label-focused-padding = 2
+; label-focused-font = 4
+
+; label-occupied = %icon% %name%
+; label-occupied-padding = 2
+; label-occupied-font = 4
+
+; label-urgent = %icon% %name%!
+; label-urgent-background = ${colors.alert}
+; label-urgent-padding = 2
+; label-urgent-font = 4
+
+; label-empty = %icon% %name%
+; label-empty-foreground = ${colors.foreground-disabled}
+; label-empty-padding = 2
+; label-empty-font = 4
+
+; fuzzy-match = true
+; ws-icon-0 = chrome;
+; ws-icon-1 = cmd;
+; ws-icon-2 = spotify;
+; ws-icon-3 = slack;
+; ws-icon-4 = office;
+; ws-icon-5 = ssh;
+; ws-icon-6 = thunar;
+; ws-icon-7 = alacritty;
+; ws-icon-8 = rstudio;R
+; ws-icon-9 = pdf;
+; ws-icon-default = 
 
 [module/i3]
 type = internal/i3
@@ -273,7 +312,7 @@ interface = enp4s0
 interval = 3.0
 
 format-connected-underline = #55aa55
-format-connected-prefix = " "
+format-connected-prefix = " "
 format-connected-prefix-foreground = ${colors.foreground-alt}
 format-connected-prefix-font = 0
 label-connected = %local_ip%
