@@ -8,10 +8,8 @@
 ;=====================================================
 
 [colors]
-;background = ${xrdb:color0:#222}
 background = #DD3B4252
 background-alt = #434C5E
-;foreground = ${xrdb:color7:#222}
 foreground = #D8DEE9
 foreground-alt = #E5E9F0
 foreground-disabled = #ECEFF4
@@ -24,10 +22,7 @@ nord-accent = #8BC0D0
 monitor = ${env:MONITOR:}
 width = 100%
 height = 35
-;offset-x = 1%
-;offset-y = 1%
-;radius = 6.0
-fixed-center = false
+fixed-center = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -35,9 +30,6 @@ foreground = ${colors.foreground}
 line-size = 3
 line-color = #f00
 
-;border-top-size = 24
-;border-left-size = 24
-;border-right-size = 24
 border-color = #00000000
 
 padding-left = 2
@@ -46,55 +38,32 @@ padding-right = 2
 module-margin-left = 1
 module-margin-right = 1
 
-; font-0 = fixed:pixelsize=10;1
-; font-1 = unifont:fontformat=truetype:size=8:antialias=true;0
-; font-2 = "Material Design Icons:style=Regular:size=12;2"
-; font-3 = "FontAwesome:pixelsize=10;0"
 font-0 = "SauceCodePro Nerd Font Mono:size=10;2"
-; font-0 = fixed:pixelsize=10;1
-; font-1 = unifont:fontformat=truetype:size=8:antialias=true;0
-; font-2 = "Material Design Icons:style=Regular:size=12;2"
-; font-3 = "FontAwesome:pixelsize=10;0"
-; font-4 = "SauceCodePro Nerd Font Mono:size=16;1"
 
-modules-left = logo bspwm xwindow
-; modules-center = xwindow
-modules-right = filesystem pulseaudio-tail wlan eth xbacklight battery date powermenu
+modules-left = logo xwindow
+modules-center = bspwm
+modules-right = filesystem pulseaudio wlan xbacklight battery date powermenu
 
-tray-position = none
-tray-padding = 2
-; tray-transparent = false
+tray-position = left
+tray-padding = 0
 tray-background = ${colors.background}
 
-dpi = 144
+dpi = 109
 
 wm-restack = bspwm
-;wm-restack = i3
-
-;override-redirect = true
-
-;scroll-up = bspwm-desknext
-;scroll-down = bspwm-deskprev
-
-;scroll-up = i3wm-wsnext
-;scroll-down = i3wm-wsprev
 
 [module/logo]
 type = custom/text
 content = 
+content-foreground = ${colors.nord-accent}
 content-padding = 0
 content-font = 0
-; content = 
-; content-padding = 2
-; content-font = 4
 click-left = /home/eujing/dmenu_cmd.sh
 
 [module/xwindow]
 type = internal/xwindow
-label =  %title%
-; label =  %title%
-; label-font = 4
-label-maxlen = 60
+label = "%{F#8BC0D0}%{F-} %title%"
+label-maxlen = 120
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -117,8 +86,9 @@ type = internal/fs
 interval = 25
 
 mount-0 = /
+mount-1 = /home
 
-label-mounted = %{A1:thunar &:}%{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%%{A}
+label-mounted = %{A1:thunar &:}%{F#8BC0D0}%mountpoint%%{F-}: %percentage_used%%%{A}
 label-unmounted = %mountpoint% not mounted
 label-unmounted-foreground = ${colors.foreground-alt}
 
@@ -132,9 +102,8 @@ format = <label-state> <label-mode>
 
 label-monitor = %name%
 
-label-focused = %icon% %name%
-label-focused-background = ${colors.background-alt}
-label-focused-underline= ${colors.primary}
+label-focused = "%{F#8BC0D0}%icon%%{F-} %name%"
+label-focused-underline= ${colors.nord-accent}
 label-focused-padding = 1
 
 label-occupied = %icon% %name%
@@ -156,73 +125,13 @@ ws-icon-3 = slack;
 ws-icon-4 = office;
 ws-icon-5 = ssh;ﲵ
 ws-icon-6 = thunar;
-ws-icon-7 = alacritty;ﲵ
+ws-icon-7 = Alacritty;ﲵ
 ws-icon-8 = rstudio;R
 ws-icon-9 = pdf;
+ws-icon-10 = Steam;
+ws-icon-11 = cemu;ﳟ
+ws-icon-12 = yuzu;ﳟ
 ws-icon-default = 
-; label-focused-padding = 2
-; label-focused-font = 4
-
-; label-occupied = %icon% %name%
-; label-occupied-padding = 2
-; label-occupied-font = 4
-
-; label-urgent = %icon% %name%!
-; label-urgent-background = ${colors.alert}
-; label-urgent-padding = 2
-; label-urgent-font = 4
-
-; label-empty = %icon% %name%
-; label-empty-foreground = ${colors.foreground-disabled}
-; label-empty-padding = 2
-; label-empty-font = 4
-
-; fuzzy-match = true
-; ws-icon-0 = chrome;
-; ws-icon-1 = cmd;
-; ws-icon-2 = spotify;
-; ws-icon-3 = slack;
-; ws-icon-4 = office;
-; ws-icon-5 = ssh;
-; ws-icon-6 = thunar;
-; ws-icon-7 = alacritty;
-; ws-icon-8 = rstudio;R
-; ws-icon-9 = pdf;
-; ws-icon-default = 
-
-[module/i3]
-type = internal/i3
-format = <label-state> <label-mode>
-index-sort = true
-wrapping-scroll = false
-
-; Only show workspaces on the same output as the bar
-;pin-workspaces = true
-
-label-mode-padding = 2
-label-mode-foreground = #000
-label-mode-background = ${colors.primary}
-
-; focused = Active workspace on focused monitor
-label-focused = %index%
-label-focused-background = ${module/bspwm.label-focused-background}
-label-focused-underline = ${module/bspwm.label-focused-underline}
-label-focused-padding = ${module/bspwm.label-focused-padding}
-
-; unfocused = Inactive workspace on any monitor
-label-unfocused = %index%
-label-unfocused-padding = ${module/bspwm.label-occupied-padding}
-
-; visible = Active workspace on unfocused monitor
-label-visible = %index%
-label-visible-background = ${self.label-focused-background}
-label-visible-underline = ${self.label-focused-underline}
-label-visible-padding = ${self.label-focused-padding}
-
-; urgent = Workspace with urgency hint set
-label-urgent = %index%
-label-urgent-background = ${module/bspwm.label-urgent-background}
-label-urgent-padding = ${module/bspwm.label-urgent-padding}
 
 [module/mpd]
 type = internal/mpd
@@ -245,29 +154,6 @@ output = eDP1
 format = <label>
 label =  %percentage%%
 
-bar-width = 10
-bar-indicator = |
-bar-indicator-foreground = #ff
-bar-indicator-font = 2
-bar-fill = ─
-bar-fill-font = 2
-bar-fill-foreground = #9f78e1
-bar-empty = ─
-bar-empty-font = 2
-bar-empty-foreground = ${colors.foreground-alt}
-
-[module/backlight-acpi]
-inherit = module/xbacklight
-type = internal/backlight
-output = eDP1
-
-[module/backlight]
-type = internal/backlight
-
-; Use the following command to list available cards:
-; $ ls -1 /sys/class/backlight/
-card = acpi_video0
-
 [module/cpu]
 type = internal/cpu
 interval = 2
@@ -286,7 +172,7 @@ label = %percentage_used%%
 
 [module/wlan]
 type = internal/network
-interface = wlan0
+interface = wlp9s0f3u2
 interval = 3.0
 
 format-connected = %{A1:cmst &:}<ramp-signal> <label-connected>%{A}
@@ -304,11 +190,11 @@ ramp-signal-1 = 直
 ramp-signal-2 = 直
 ramp-signal-3 = 直
 ramp-signal-4 = 直
-ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-foreground = ${colors.nord-accent}
 
 [module/eth]
 type = internal/network
-interface = enp4s0
+interface = enp7s0
 interval = 3.0
 
 format-connected-underline = #55aa55
@@ -319,7 +205,7 @@ label-connected = %local_ip%
 
 format-disconnected = <label-disconnected>
 format-disconnected-underline = ${colors.alert}
-label-disconnected = %ifname% disconnected
+label-disconnected = " %ifname% disconnected"
 label-disconnected-foreground = ${colors.foreground-alt}
 
 [module/date]
@@ -334,7 +220,7 @@ time-alt = %H:%M:%S
 
 format-prefix-font = 0
 format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-foreground = ${colors.nord-accent}
 ; format-underline = ${colors.nord-accent}
 
 label = %date% %time%
@@ -472,13 +358,27 @@ screenchange-reload = true
 margin-top = 5
 margin-bottom = 5
 
-[module/pulseaudio-tail]
-type = custom/script
-exec = ~/.config/polybar/pulseaudio-tail.sh
-tail = true
-click-right = exec pavucontrol &
-click-left = ~/.config/polybar/pulseaudio-tail.sh --mute
-scroll-up = ~/.config/polybar/pulseaudio-tail.sh --up
-scroll-down = ~/.config/polybar/pulseaudio-tail.sh --down
+[module/pulseaudio]
+type = internal/pulseaudio
 
+; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+; If not, uses default sink
+; sink = alsa_output.pci-0000_0a_00.3.analog-stereo
+sink = alsa_output.pci-0000_0a_00.3.analog-stereo
+
+; Use PA_VOLUME_UI_MAX (~153%) if true, or PA_VOLUME_NORM (100%) if false
+; Default: true
+use-ui-max = false
+
+; Interval for volume increase/decrease (in percent points)
+; Default: 5
+interval = 5
+
+click-right = pavucontrol &
+label-muted = ﱝ muted
+ramp-volume-0 = 奄
+ramp-volume-1 = 奔
+ramp-volume-2 = 墳
+ramp-volume-foreground = ${colors.nord-accent}
+format-volume = <ramp-volume> <label-volume>
 ; vim:ft=dosini

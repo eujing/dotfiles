@@ -12,13 +12,15 @@ if [[ $N_MONITORS == "2" ]]; then
 fi
 
 # For dunst to work
-systemctl --user set-environment DISPLAY=:0
+# systemctl --user set-environment DISPLAY=:0
+deadd-notification-center &
 
 feh --bg-scale --randomize ~/.wallpapers/*
 setxkbmap -option caps:escape
 xinput --set-prop "SYNA8004:00 06CB:CD8B Touchpad" "libinput Natural Scrolling Enabled" 1
 sxhkd &
 # compton --config $HOME/.config/compton.conf -b
+picom --config $HOME/.config/picom/picom.conf --experimental-backends -b
 # udiskie -2 &
 thunar --daemon &
 exec bspwm
