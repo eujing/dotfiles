@@ -13,17 +13,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'w0rp/ale'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'arcticicestudio/nord-vim'
-Plug 'kamwitsta/nordisk'
-Plug 'ericyan/vim-ocean'
-Plug 'fsharp/vim-fsharp', {
-    \ 'for': 'fsharp',
-    \ 'do': 'make fsautocomplete',
-    \}
 Plug 'itchyny/lightline.vim'
 Plug 'maximbaz/lightline-ale'
-Plug 'jelera/vim-javascript-syntax'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
 Plug 'Raimondi/delimitMate'
 Plug 'junegunn/fzf', {
     \ 'dir': '~/.fzf',
@@ -35,12 +26,9 @@ Plug 'PeterRincker/vim-argumentative'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
-Plug 'cmugpi/vim-c0'
-Plug 'easymotion/vim-easymotion'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-pyclang'
-Plug 'ncm2/ncm2-jedi'
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
@@ -50,6 +38,9 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 if has('nvim')
     Plug 'jalvesaq/Nvim-R'
 endif
+Plug 'lervag/vimtex'
+Plug 'machakann/vim-highlightedyank'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 " Settings for true color and colorscheme
@@ -60,7 +51,7 @@ set background=dark
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
-colorscheme base16-ocean
+colorscheme nord
 
 syntax enable
 filetype plugin indent on
@@ -98,8 +89,6 @@ set updatetime=100
 
 au FileType py set autoindent
 au FileType py set smartindent
-" Python Syntax highlighting from python-syntax
-let g:python_highlight_all = 1
 
 "List chars
 noremap <F3> :set list!<CR>
@@ -112,20 +101,17 @@ let g:ale_list_window_size = 5
 let g:ale_linter_aliases = {'rmd': ['r']}
 let g:ale_linters = {
     \ 'javascript': ['eslint'],
-    \ 'python': ['pyls'],
+    \ 'python': ['pylint'],
     \}
-let g:ale_python_flake8_args = "--ignore=E501"
-let g:ale_python_mypy_options = "--check-untyped-defs --strict-optional --warn-return-any --follow-imports=normal --incremental"
 let g:ale_echo_cursor = 1
 let g:ale_completion_enabled = 0
 let g:ale_pattern_options = {
-            \   '.*\.json$': {'ale_enabled': 0},
-            \   'fugitive:///*': {'ale_enabled': 0}
-            \}
+    \   '.*\.json$': {'ale_enabled': 0},
+    \   'fugitive:///*': {'ale_enabled': 0}
+    \}
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '●'
 noremap <F5> :ALEToggle<CR>
-noremap <C-H> :ALEHover<CR>
 nnoremap <silent> ]e :ALENextWrap<CR>
 nnoremap <silent> [e :ALEPreviousWrap<CR>
 autocmd ColorScheme *
@@ -190,9 +176,11 @@ let g:lightline = {
     \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
     \ },
     \ 'component_function': {
-    \   'readonly': 'MyReadonly', 
+    \   'fileformat': 'MyFileformat',
+    \   'filetype': 'MyFiletype',
+    \   'readonly': 'MyReadonly',
     \   'modified': 'MyModified',
-    \   'fugitive': 'MyFugitive', 
+    \   'fugitive': 'MyFugitiveHead',
     \   'filename': 'MyFilename'
     \ },
     \ 'component_visible_condition': {
@@ -236,10 +224,11 @@ function! MyReadonly()
     endif
 endfunction
 
-function! MyFugitive()
-    if exists('*fugitive#head')
-        let _ = fugitive#head()
-        return strlen(_) ? "\ue0a0" . ' ' . _ : ''
+function! MyFugitiveHead()
+    if exists('*FugitiveHead')
+        let head = FugitiveHead()
+        let icon = "\ue725"
+        return strlen(head) ? icon . ' ' . head : ''
     endif
     return ''
 endfunction
@@ -249,6 +238,14 @@ function! MyFilename()
     return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
          \ ('' != fname ? fname : '[No Name]') .
          \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? WebDevIconsGetFileTypeSymbol() . ' ' . &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? (WebDevIconsGetFileFormatSymbol() . ' ' . &fileformat) : ''
 endfunction
 
 "FZF settings
@@ -322,14 +319,18 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 let g:ncm2_pyclang#library_path = "/usr/lib64/libclang.so.6.0"
 
-let g:LanguageClient_useVirtualText = 0
-let g:LanguageClient_completionPreferTextEdit = 1
+" let g:LanguageClient_useVirtualText = 0
+" let g:LanguageClient_completionPreferTextEdit = 1
 let g:LanguageClient_serverCommands = {
+    \ 'python': ['pyls'],
     \ 'r': ['R', '--slave', '-e', 'languageserver::run(debug="/home/eujing/rlanguageserver.debug.log")'],
     \ 'rmd': ['R', '--slave', '-e', 'languageserver::run()'],
     \ 'javascript': ['javascript-typescript-stdio'],
     \ 'javascript.jsx': ['javascript-typescript-stdio']
     \ }
+nmap <F1> <Plug>(lcn-menu)
+nmap <silent>K <Plug>(lcn-hover)
+nmap <silent> gd <Plug>(lcn-definition)
 autocmd ColorScheme *
     \ highlight LSPErrorSign ctermbg=NONE ctermfg=red guifg=red |
     \ highlight LSPWarningSign ctermbg=NONE ctermfg=yellow guifg=yellow |
@@ -339,14 +340,14 @@ let g:LanguageClient_diagnosticsDisplay = {
         \ "name": "Error",
         \ "texthl": "ALEError",
         \ "signText": "✘",
-        \ "signTexthl": "LSPErrorSign",
+        \ "signTexthl": "ALEErrorSign",
         \ "virtualTexthl": "Error",
     \},
     \ 2: {
         \ "name": "Warning",
         \ "texthl": "ALEWarning",
         \ "signText": "●",
-        \ "signTexthl": "LSPWarningSign",
+        \ "signTexthl": "ALEWarningSign",
         \ "virtualTexthl": "Todo",
     \ },
     \ 3: {
@@ -366,3 +367,11 @@ let g:LanguageClient_diagnosticsDisplay = {
     \ }
 
 let g:vista_default_executive = 'lcn'
+
+" Vim Tex settings
+let g:latex_view_general_viewer = 'zathura'
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_latexmk_progname= '/usr/bin/nvr'
+let g:tex_flavor = "latex"
+
+let g:webdevicons_enable = 1
